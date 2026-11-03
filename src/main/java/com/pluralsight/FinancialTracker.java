@@ -38,9 +38,6 @@ public class FinancialTracker {
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern(TIME_PATTERN);
     private static final DateTimeFormatter DATETIME_FMT = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
 
-    /* ------------------------------------------------------------------
-       Main menu
-       ------------------------------------------------------------------ */
     public static void main(String[] args) {
         loadTransactions(FILE_NAME);
 
@@ -68,15 +65,6 @@ public class FinancialTracker {
         scanner.close();
     }
 
-    /* ------------------------------------------------------------------
-       File I/O
-       ------------------------------------------------------------------ */
-
-    /**
-     * Load transactions from FILE_NAME.
-     * • If the file doesn’t exist, create an empty one so that future writes succeed.
-     * • Each line looks like: date|time|description|vendor|amount
-     */
     public static void loadTransactions(String fileName) {
         // TODO: create file if it does not exist, then read each line,
         //       parse the five fields, build a Transaction object,
@@ -105,16 +93,6 @@ public class FinancialTracker {
         }
     }
 
-    /* ------------------------------------------------------------------
-       Add new transactions
-       ------------------------------------------------------------------ */
-
-    /**
-     * Prompt for ONE date+time string in the format
-     * "yyyy-MM-dd HH:mm:ss", plus description, vendor, amount.
-     * Validate that the amount entered is positive.
-     * Store the amount as-is (positive) and append to the file.
-     */
     private static void addDeposit(Scanner scanner) {
         // TODO
 
@@ -137,9 +115,8 @@ public class FinancialTracker {
 
         if (amount <= 0){
             System.out.println("Amount must be positive(above 0): "); // print this message if the amount entered is not positive.
+            return;
         }
-
-        transactions.add(new Transaction( date,time,description,vendor,amount));
 
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME,true)); // so its appends and not overwrite in the csv file.
@@ -150,22 +127,61 @@ public class FinancialTracker {
                     amount);
             writer.newLine();
 
+            transactions.add(new Transaction( date,time,description,vendor,amount));
+
             System.out.println("Deposit successfully added! ");
+            writer.close(); // close the writer so it actually writes.
 
         } catch (Exception e) {
             System.err.println("Problem saving deposit: " + e.getMessage());
         }
 
-
     }
 
-    /**
-     * Same prompts as addDeposit.
-     * Amount must be entered as a positive number,
-     * then converted to a negative amount before storing.
-     */
     private static void addPayment(Scanner scanner) {
         // TODO
+
+        System.out.print("Enter date and time (yyyy-MM-dd HH:mm:ss): ");
+        String dateTimeInput = scanner.nextLine();
+
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeInput,DATETIME_FMT);  // change the users input into datetime object using the datetime formatter.
+
+        LocalDate date = dateTime.toLocalDate(); // extracts the date
+        LocalTime time = dateTime.toLocalTime(); // extracts the time
+
+        System.out.print("Enter the description: ");
+        String description = scanner.nextLine();
+
+        System.out.print("Enter the vendor: ");
+        String vendor = scanner.nextLine();
+
+        System.out.print("Enter the deposit amount: ");
+        double amount = Double.parseDouble(scanner.nextLine());
+
+        if (amount <= 0){
+            System.out.println("Amount must be positive(above 0): "); // print this message if the amount entered is not positive.
+            return;
+        }
+        amount = -amount; // after the input, change it to a negative.
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME,true));
+            writer.write(date.format(DATE_FMT) + "|" +
+                    time.format(TIME_FMT) + "|" +
+                    description + "|" +
+                    vendor + "|" +
+                    amount);
+            writer.newLine();
+            transactions.add(new Transaction(date,time,description,vendor,amount));
+            System.out.println("Payment was added successfully!");
+
+            writer.close(); //close the buffered writer so it writes.
+
+        } catch (Exception e) {
+            System.out.println("Error registering the payment: " + e.getMessage());;
+        }
+
+
     }
 
     /* ------------------------------------------------------------------
