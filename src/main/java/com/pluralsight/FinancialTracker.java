@@ -1,7 +1,9 @@
 package com.pluralsight;
 
-import java.io.File;
+import java.io.*;
+import java.text.DateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -79,6 +81,28 @@ public class FinancialTracker {
         // TODO: create file if it does not exist, then read each line,
         //       parse the five fields, build a Transaction object,
         //       and add it to the transactions list.
+        String line;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME)); //create a buffer reader.
+            while ((line = reader.readLine()) != null) {
+                String[] tokens = line.split("\\|");
+                LocalDate date = LocalDate.parse(tokens[0]);
+                LocalTime time = LocalTime.parse(tokens[1]);
+                String description = tokens[2];
+                String vendor = tokens[3];
+                double amount = Double.parseDouble(tokens[4]);
+                transactions.add(new Transaction(date,time,description,vendor,amount)); // add the new transactions to the list.
+
+            }
+            reader.close(); // close the reader
+            for (Transaction transaction : transactions) {
+                System.out.println(transaction);
+
+            }
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /* ------------------------------------------------------------------
@@ -93,6 +117,46 @@ public class FinancialTracker {
      */
     private static void addDeposit(Scanner scanner) {
         // TODO
+
+        System.out.print("Enter date and time (yyyy-MM-dd HH:mm:ss): ");
+        String dateTimeInput = scanner.nextLine();
+
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeInput,DATETIME_FMT);
+
+        LocalDate date = dateTime.toLocalDate();
+        LocalTime time = dateTime.toLocalTime();
+
+        System.out.print("Enter the description: ");
+        String description = scanner.nextLine();
+
+        System.out.print("Enter the vendor: ");
+        String vendor = scanner.nextLine();
+
+        System.out.print("Enter the deposit amount: ");
+        double amount = Double.parseDouble(scanner.nextLine());
+
+        if (amount <= 0){
+            System.out.println("Amount must be positive(above 0): "); // print this message if the amount entered is not positive.
+        }
+
+        transactions.add(new Transaction( date,time,description,vendor,amount));
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME,true)); // so its appends and not overwrite in the csv file.
+            writer.write(date.format(DATE_FMT) + "|" +
+                    time.format(TIME_FMT) + "|" +
+                    description + "|" +
+                    vendor + "|" +
+                    amount);
+            writer.newLine();
+
+            System.out.println("Deposit successfully added! ");
+
+        } catch (Exception e) {
+            System.err.println("Problem saving deposit: " + e.getMessage());
+        }
+
+
     }
 
     /**
