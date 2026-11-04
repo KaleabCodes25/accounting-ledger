@@ -225,29 +225,75 @@ public class FinancialTracker {
        ------------------------------------------------------------------ */
     private static void displayLedger() {
         /* TODO – print all transactions in column format, newest first */
+        System.out.println("\n==============================ALL TRANSACTIONS=======================================");
 
-        System.out.printf("%-12s | %-29s | %-23s | %12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT");
+        System.out.printf("%-12s | %-29s | %-23s | %-12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT");
 
         System.out.println("-------------|-------------------------------|-------------------------|-------------");
 
-                for (int i = transactions.size() - 1; i >= 0; i--) { // get the last index, then go down the indexes until zero.
-                    Transaction transaction = transactions.get(i);  // then assign it to transaction,so we can access its values.
+        for (int i = transactions.size() - 1; i >= 0; i--) { // get the last index, then go down the indexes until zero.
+            Transaction transaction = transactions.get(i);  // then assign it to transaction,so we can access its values.
 
-                    System.out.printf("%-12s | %-29s | %-23s | $%11.2f%n",  // then call the getters to print it out
+            System.out.printf("%-12s | %-29s | %-23s | $%11.2f%n",  // then call the getters to print it out
 
-                            transaction.getDate(),
-                            transaction.getDescription(),
-                            transaction.getVendor(),
-                            transaction.getAmount());
-                }
+                    transaction.getDate(),
+                    transaction.getDescription(),
+                    transaction.getVendor(),
+                    transaction.getAmount());
+        }
 
         System.out.println("======================================================================================");
 
     }
 
-    private static void displayDeposits() { /* TODO – only amount > 0               */ }
+    private static void displayDeposits() {
+        //* TODO – only amount > 0
 
-    private static void displayPayments() { /* TODO – only amount < 0               */ }
+        System.out.println("\n==================================DEPOSITS==========================================");
+
+        System.out.printf("%-12s | %-20s | %-20s | %12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT");
+
+        System.out.println("---------------------------------------------------------------------------------------");
+
+        for (Transaction transaction : transactions) { // loop through the transactions list.
+
+            if (transaction.getAmount() > 0) {  // if getAmount value is positive, then get those transactions.
+
+                System.out.printf("%-12s | %-20s | %-20s | $%10.2f%n",
+                        transaction.getDate(),
+                        transaction.getDescription(),
+                        transaction.getVendor(),
+                        transaction.getAmount());
+            }
+
+        }
+        System.out.println("========================================================================================");
+    }
+
+    private static void displayPayments() {
+        /* TODO – only amount < 0               */
+        System.out.println("\n=====================================PAYMENTS========================================");
+
+        System.out.printf("%-12s | %-25s | %-25s | %12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT");
+
+        System.out.println("---------------------------------------------------------------------------------------");
+
+        for (Transaction transaction : transactions) { // loop through the transactions list.
+
+            if (transaction.getAmount() < 0) {  // if getAmount value is negative, then get those transactions.
+
+                System.out.printf("%-12s | %-30s | %-25s | $%10.2f%n",
+                        transaction.getDate(),
+                        transaction.getDescription(),
+                        transaction.getVendor(),
+                        transaction.getAmount());
+
+            }
+
+        }
+
+        System.out.println("=======================================================================================");
+    }
 
     /* ------------------------------------------------------------------
        Reports menu
