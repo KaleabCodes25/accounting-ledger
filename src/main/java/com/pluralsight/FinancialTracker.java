@@ -39,6 +39,19 @@ public class FinancialTracker {
     private static final DateTimeFormatter DATETIME_FMT = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
 
     public static void main(String[] args) {
+
+        System.out.println("""
+                      ░██                           ░██                               \s
+                      ░██                           ░██                               \s
+                      ░██          ░███████   ░████████  ░████████  ░███████  ░██░████\s
+                      ░██         ░██    ░██ ░██    ░██ ░██    ░██ ░██    ░██ ░███    \s
+                      ░██         ░█████████ ░██    ░██ ░██    ░██ ░█████████ ░██     \s
+                      ░██         ░██        ░██   ░███ ░██   ░███ ░██        ░██     \s
+                      ░██████████  ░███████   ░█████░██  ░█████░██  ░███████  ░██     \s
+                                                               ░██                    \s
+                                                         ░███████                     \s
+                
+                """);
         loadTransactions(FILE_NAME);
 
         Scanner scanner = new Scanner(System.in);
@@ -79,14 +92,10 @@ public class FinancialTracker {
                 String description = tokens[2];
                 String vendor = tokens[3];
                 double amount = Double.parseDouble(tokens[4]);
-                transactions.add(new Transaction(date,time,description,vendor,amount)); // add the new transactions to the list.
+                transactions.add(new Transaction(date, time, description, vendor, amount)); // add the new transactions to the list.
 
             }
             reader.close(); // close the reader
-            for (Transaction transaction : transactions) {
-                System.out.println(transaction);
-
-            }
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -99,7 +108,7 @@ public class FinancialTracker {
         System.out.print("Enter date and time (yyyy-MM-dd HH:mm:ss): ");
         String dateTimeInput = scanner.nextLine();
 
-        LocalDateTime dateTime = LocalDateTime.parse(dateTimeInput,DATETIME_FMT);
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeInput, DATETIME_FMT);
 
         LocalDate date = dateTime.toLocalDate();
         LocalTime time = dateTime.toLocalTime();
@@ -113,13 +122,13 @@ public class FinancialTracker {
         System.out.print("Enter the deposit amount: ");
         double amount = Double.parseDouble(scanner.nextLine());
 
-        if (amount <= 0){
+        if (amount <= 0) {
             System.out.println("Amount must be positive(above 0): "); // print this message if the amount entered is not positive.
             return;
         }
 
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME,true)); // so its appends and not overwrite in the csv file.
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true)); // so its appends and not overwrite in the csv file.
             writer.write(date.format(DATE_FMT) + "|" +
                     time.format(TIME_FMT) + "|" +
                     description + "|" +
@@ -127,7 +136,7 @@ public class FinancialTracker {
                     amount);
             writer.newLine();
 
-            transactions.add(new Transaction( date,time,description,vendor,amount));
+            transactions.add(new Transaction(date, time, description, vendor, amount));
 
             System.out.println("Deposit successfully added! ");
             writer.close(); // close the writer so it actually writes.
@@ -144,7 +153,7 @@ public class FinancialTracker {
         System.out.print("Enter date and time (yyyy-MM-dd HH:mm:ss): ");
         String dateTimeInput = scanner.nextLine();
 
-        LocalDateTime dateTime = LocalDateTime.parse(dateTimeInput,DATETIME_FMT);  // change the users input into datetime object using the datetime formatter.
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeInput, DATETIME_FMT);  // change the users input into datetime object using the datetime formatter.
 
         LocalDate date = dateTime.toLocalDate(); // extracts the date
         LocalTime time = dateTime.toLocalTime(); // extracts the time
@@ -158,29 +167,29 @@ public class FinancialTracker {
         System.out.print("Enter the deposit amount: ");
         double amount = Double.parseDouble(scanner.nextLine());
 
-        if (amount <= 0){
+        if (amount <= 0) {
             System.out.println("Amount must be positive(above 0): "); // print this message if the amount entered is not positive.
             return;
         }
         amount = -amount; // after the input, change it to a negative.
 
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME,true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true));
             writer.write(date.format(DATE_FMT) + "|" +
                     time.format(TIME_FMT) + "|" +
                     description + "|" +
                     vendor + "|" +
                     amount);
             writer.newLine();
-            transactions.add(new Transaction(date,time,description,vendor,amount));
+            transactions.add(new Transaction(date, time, description, vendor, amount));
             System.out.println("Payment was added successfully!");
 
             writer.close(); //close the buffered writer so it writes.
 
         } catch (Exception e) {
-            System.out.println("Error registering the payment: " + e.getMessage());;
+            System.out.println("Error registering the payment: " + e.getMessage());
+            ;
         }
-
 
     }
 
@@ -214,7 +223,27 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Display helpers: show data in neat columns
        ------------------------------------------------------------------ */
-    private static void displayLedger() { /* TODO – print all transactions in column format, newest first */ }
+    private static void displayLedger() {
+        /* TODO – print all transactions in column format, newest first */
+
+        System.out.printf("%-12s | %-29s | %-23s | %12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT");
+
+        System.out.println("-------------|-------------------------------|-------------------------|-------------");
+
+                for (int i = transactions.size() - 1; i >= 0; i--) { // get the last index, then go down the indexes until zero.
+                    Transaction transaction = transactions.get(i);  // then assign it to transaction,so we can access its values.
+
+                    System.out.printf("%-12s | %-29s | %-23s | $%11.2f%n",  // then call the getters to print it out
+
+                            transaction.getDate(),
+                            transaction.getDescription(),
+                            transaction.getVendor(),
+                            transaction.getAmount());
+                }
+
+        System.out.println("======================================================================================");
+
+    }
 
     private static void displayDeposits() { /* TODO – only amount > 0               */ }
 
