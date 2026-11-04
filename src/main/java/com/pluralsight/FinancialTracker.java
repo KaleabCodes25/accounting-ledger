@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 /*
@@ -146,6 +147,7 @@ public class FinancialTracker {
         } catch (Exception e) {
             System.err.println("Problem saving deposit: " + e.getMessage());
         }
+
 
     }
 
@@ -357,9 +359,12 @@ public class FinancialTracker {
                     filterTransactionsByVendor(vendor);
                 }
                 case "6" -> customSearch(scanner);
+
                 case "0" -> running = false;
+
                 default -> System.out.println("Invalid option");
             }
+
         }
     }
 
@@ -372,7 +377,7 @@ public class FinancialTracker {
         for (Transaction transaction : transactions) { // loop through transactions.
             LocalDate date = transaction.getDate(); // get the date of each transaction.
 
-            if (!date.isBefore(start) && !date.isAfter(end)) { // then check if the date is before(start) and after(start), ! makes it so the parameters are included
+            if (!date.isBefore(start) && !date.isAfter(end)) { // then check if the date is before(start) and after(start) ! makes it so the parameters are included.
                 System.out.printf("%-12s | %-30s | %-25s | $%10.2f%n", // then print every transaction that fits the range.
                         transaction.getDate(),
                         transaction.getDescription(),
@@ -402,12 +407,62 @@ public class FinancialTracker {
             System.out.println("NO transactions that match your search criteria!!"); // if it doesn't match, then print this out.
         }
 
-
     }
 
     private static void customSearch(Scanner scanner) {
         // TODO – prompt for any combination of date range, description,
         //        vendor, and exact amount, then display matches
+        System.out.println("===================================CUSTOM SEARCH======================================");
+        System.out.print("Enter a start date(yyyy-MM-dd) or skip by pressing Enter: ");
+        String startDate = scanner.nextLine().trim();
+
+        System.out.print("Enter an end date(yyyy-MM-dd) or skip by pressing Enter: ");
+        String endDate = scanner.nextLine().trim();
+
+        System.out.print("Enter a description or skip by pressing Enter: ");
+        String description = scanner.nextLine().trim();
+
+        System.out.print("Enter a vendor name or skip by pressing Enter: ");
+        String vendor = scanner.nextLine().trim();
+
+        System.out.println("Enter the amount you want to search or skip by pressing Enter: ");
+        String amount = scanner.nextLine().trim();
+
+        for (Transaction transaction : transactions) {
+
+            boolean foundMatch = true; // we'll start as the transaction fits the criteria to be displayed.
+
+            if (!startDate.isEmpty() && transaction.getDate().isBefore(parseDate(startDate))) { /* if date isn't empty and the date is before all transaction dates,
+                don't display. */
+                foundMatch = false;
+            }
+            if (!endDate.isEmpty() && transaction.getDate().isAfter(parseDate(endDate))) { /* if date isn't empty and the date is after all transaction dates,
+                don't display. */
+                foundMatch = false;
+
+            }
+            if (!description.isEmpty() && !transaction.getDescription().toLowerCase().contains(description.toLowerCase())) {/* if description isn't empty and transaction description is not contained in
+                       in transaction, then false */
+                foundMatch = false;
+
+            }
+            if (!vendor.isEmpty() && !transaction.getVendor().equalsIgnoreCase(vendor)) { /* if not empty and vendor is not in transaction ,then false.
+                foundMatch = false;
+            */
+            }
+
+            if (!amount.isEmpty() && (Double.compare(transaction.getAmount(), parseDouble(amount)) != 0)) {// using compare method to compare the two amounts, if zero, then false.
+                foundMatch = false; //
+            }
+            if (foundMatch) {
+                System.out.printf("%-12s | %-30s | %-25s | $%10.2f%n", // then print every transaction that matches.
+                        transaction.getDate(),
+                        transaction.getDescription(),
+                        transaction.getVendor(),
+                        transaction.getAmount());
+
+            }
+        }
     }
 
     /* ------------------------------------------------------------------
@@ -415,14 +470,18 @@ public class FinancialTracker {
        ------------------------------------------------------------------ */
     private static LocalDate parseDate(String s) {
         /* TODO – return LocalDate or null */
-        LocalDate today = LocalDate.now();
-
-        return null;
+        if (s.isEmpty()) { // checking to see its empty.
+            return null;
+        }
+        return LocalDate.parse(s);
     }
 
     private static Double parseDouble(String s) {
         /* TODO – return Double   or null */
-        return null;
+        if (s.isEmpty()) { // check to see if its empty.
+            return null;
+        }
+        return Double.parseDouble(s);
     }
 
 }
