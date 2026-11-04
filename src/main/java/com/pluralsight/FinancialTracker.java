@@ -199,7 +199,10 @@ public class FinancialTracker {
     private static void ledgerMenu(Scanner scanner) {
         boolean running = true;
         while (running) {
-            System.out.println("Ledger");
+            System.out.println("\n================================");
+            System.out.println("             Ledger              ");
+            System.out.println("=================================");
+
             System.out.println("Choose an option:");
             System.out.println("A) All");
             System.out.println("D) Deposits");
@@ -314,7 +317,11 @@ public class FinancialTracker {
             String input = scanner.nextLine().trim();
 
             switch (input) {
-                case "1" -> {/* TODO – month-to-date report */ }
+                case "1" -> {
+                    LocalDate today = LocalDate.now();
+                    LocalDate startOfMonth = today.withDayOfMonth(1);
+                    filterTransactionsByDate(startOfMonth,today);
+                }
                 case "2" -> {/* TODO – previous month report */ }
                 case "3" -> {/* TODO – year-to-date report   */ }
                 case "4" -> {/* TODO – previous year report  */ }
@@ -331,6 +338,21 @@ public class FinancialTracker {
        ------------------------------------------------------------------ */
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
         // TODO – iterate transactions, print those within the range
+
+        for (Transaction transaction : transactions) { // loop through transactions.
+            LocalDate date = transaction.getDate(); // get the date of each transaction.
+
+            if(!date.isBefore(start) && !date.isAfter(end)){ // then check if the date is before(start) and after(start), ! makes it so the parameters are included
+                System.out.printf("%-12s | %-30s | %-25s | $%10.2f%n", // then print every transaction that fits the range.
+                        transaction.getDate(),
+                        transaction.getDescription(),
+                        transaction.getVendor(),
+                        transaction.getAmount());
+
+            }
+        }
+
+
     }
 
     private static void filterTransactionsByVendor(String vendor) {
@@ -347,6 +369,8 @@ public class FinancialTracker {
        ------------------------------------------------------------------ */
     private static LocalDate parseDate(String s) {
         /* TODO – return LocalDate or null */
+        LocalDate today = LocalDate.now();
+
         return null;
     }
 
@@ -354,4 +378,5 @@ public class FinancialTracker {
         /* TODO – return Double   or null */
         return null;
     }
+
 }
