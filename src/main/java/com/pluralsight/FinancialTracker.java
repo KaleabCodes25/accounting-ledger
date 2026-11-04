@@ -1,6 +1,7 @@
 package com.pluralsight;
 
 import java.io.*;
+import java.nio.file.LinkOption;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -318,13 +319,13 @@ public class FinancialTracker {
 
             switch (input) {
                 case "1" -> {
-                    LocalDate today = LocalDate.now();
+                    LocalDate today = LocalDate.now(); // get the local date.
                     LocalDate startOfMonth = today.withDayOfMonth(1);
                     filterTransactionsByDate(startOfMonth,today);
                 }
                 case "2" -> {
                     LocalDate month = LocalDate.now();
-                    LocalDate previousMonth = month.minusMonths(1);
+                    LocalDate previousMonth = month.minusMonths(1); //use minusMonths method to get the previous month.
 
                     LocalDate start = previousMonth.withDayOfMonth(1);
                     LocalDate end = previousMonth.withDayOfMonth(previousMonth.lengthOfMonth()); // we want the local date, so this gives us the end of the previous month.
@@ -333,10 +334,18 @@ public class FinancialTracker {
                 }
                 case "3" -> {
                     LocalDate now = LocalDate.now();
-                    LocalDate yearBegin = now.withDayOfYear(1);
+                    LocalDate yearBegin = now.withDayOfYear(1);  // use this method to get the first day of the year.
                     filterTransactionsByDate(yearBegin,now);
                 }
-                case "4" -> {/* TODO – previous year report  */ }
+                case "4" -> {
+                    LocalDate now = LocalDate.now();
+                    LocalDate previousYear = now.minusYears(1);  // use minusYears method to get the previous year.
+
+                    LocalDate start = previousYear.withDayOfYear(1);
+                    LocalDate end = previousYear.withDayOfYear(previousYear.lengthOfYear());
+                    filterTransactionsByDate(start,end);
+
+                     }
                 case "5" -> {/* TODO – prompt for vendor then report */ }
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
