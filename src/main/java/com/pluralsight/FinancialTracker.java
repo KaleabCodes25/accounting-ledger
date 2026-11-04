@@ -1,5 +1,6 @@
 package com.pluralsight;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.io.*;
 import java.nio.file.LinkOption;
 import java.text.DateFormat;
@@ -321,7 +322,8 @@ public class FinancialTracker {
                 case "1" -> {
                     LocalDate today = LocalDate.now(); // get the local date.
                     LocalDate startOfMonth = today.withDayOfMonth(1);
-                    filterTransactionsByDate(startOfMonth,today);
+                    System.out.println("=================================START OF MONTH====================================");
+                    filterTransactionsByDate(startOfMonth, today);
                 }
                 case "2" -> {
                     LocalDate month = LocalDate.now();
@@ -329,13 +331,15 @@ public class FinancialTracker {
 
                     LocalDate start = previousMonth.withDayOfMonth(1);
                     LocalDate end = previousMonth.withDayOfMonth(previousMonth.lengthOfMonth()); // we want the local date, so this gives us the end of the previous month.
-                    filterTransactionsByDate(start,end);
+                    System.out.println("==================================PREVIOUS MONTH=====================================");
+                    filterTransactionsByDate(start, end);
 
                 }
                 case "3" -> {
                     LocalDate now = LocalDate.now();
                     LocalDate yearBegin = now.withDayOfYear(1);  // use this method to get the first day of the year.
-                    filterTransactionsByDate(yearBegin,now);
+                    System.out.println("=================================BEGINNING OF YEAR====================================");
+                    filterTransactionsByDate(yearBegin, now);
                 }
                 case "4" -> {
                     LocalDate now = LocalDate.now();
@@ -343,10 +347,15 @@ public class FinancialTracker {
 
                     LocalDate start = previousYear.withDayOfYear(1);
                     LocalDate end = previousYear.withDayOfYear(previousYear.lengthOfYear());
-                    filterTransactionsByDate(start,end);
+                    System.out.println("===================================PREVIOUS YEAR======================================");
+                    filterTransactionsByDate(start, end);
 
-                     }
-                case "5" -> {/* TODO – prompt for vendor then report */ }
+                }
+                case "5" -> {
+                    System.out.println("Enter the name of the vendor: "); // Ask for the vendor input, and if it matches list, then display.
+                    String vendor = scanner.nextLine().trim();
+                    filterTransactionsByVendor(vendor);
+                }
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
                 default -> System.out.println("Invalid option");
@@ -363,7 +372,7 @@ public class FinancialTracker {
         for (Transaction transaction : transactions) { // loop through transactions.
             LocalDate date = transaction.getDate(); // get the date of each transaction.
 
-            if(!date.isBefore(start) && !date.isAfter(end)){ // then check if the date is before(start) and after(start), ! makes it so the parameters are included
+            if (!date.isBefore(start) && !date.isAfter(end)) { // then check if the date is before(start) and after(start), ! makes it so the parameters are included
                 System.out.printf("%-12s | %-30s | %-25s | $%10.2f%n", // then print every transaction that fits the range.
                         transaction.getDate(),
                         transaction.getDescription(),
@@ -373,11 +382,27 @@ public class FinancialTracker {
             }
         }
 
-
     }
 
     private static void filterTransactionsByVendor(String vendor) {
         // TODO – iterate transactions, print those with matching vendor
+        System.out.println("=====================================VENDOR========================================");
+        boolean found = false;
+        for (Transaction transaction : transactions) {
+            if (vendor.equalsIgnoreCase(transaction.getVendor())) {
+                System.out.printf("%-12s | %-30s | %-25s | $%10.2f%n", // then print every transaction that is the same vendor
+                        transaction.getDate(),
+                        transaction.getDescription(),
+                        transaction.getVendor(),
+                        transaction.getAmount());
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("NO transactions that match your search criteria!!"); // if it doesn't match, then print this out.
+        }
+
+
     }
 
     private static void customSearch(Scanner scanner) {
