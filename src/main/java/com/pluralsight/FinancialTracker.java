@@ -39,6 +39,7 @@ public class FinancialTracker {
     private static final DateTimeFormatter DATETIME_FMT = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
 
     public static void main(String[] args) {
+        System.out.println("\u001B[33m" + "\u001B[1m");
 
         System.out.println("""
                       ░██                           ░██                               \s
@@ -53,6 +54,7 @@ public class FinancialTracker {
                 
                 """);
         loadTransactions(FILE_NAME);
+        System.out.println("\u001B[0m");
 
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
@@ -60,9 +62,11 @@ public class FinancialTracker {
         while (running) {
             System.out.println("Welcome to TransactionApp");
             System.out.println("Choose an option:");
-            System.out.println("D) Add Deposit");
-            System.out.println("P) Make Payment (Debit)");
-            System.out.println("L) Ledger");
+            System.out.println("\u001B[33m\u001B[1m===== LEDGER =====\u001B[0m");
+
+            System.out.println("D)\u001B[32m Add Deposit\u001B[0m");
+            System.out.println("P)\u001B[31m Make Payment (Debit)\u001B[0m");
+            System.out.println("L)\u001B[38;2;212;175;55ml Ledger\u001B[0m");
             System.out.println("X) Exit");
 
             String input = scanner.nextLine().trim();
