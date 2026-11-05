@@ -72,10 +72,9 @@ public class FinancialTracker {
             System.out.println(BOLD +  "Welcome to TransactionApp");
             System.out.println(BOLD + "Choose an option:");
             System.out.println(GOLD + BOLD + "===== LEDGER =====" + RESET);
-
-            System.out.println(BOLD + "D)\u001B[32m Add Deposit\u001B[0m");
-            System.out.println(BOLD + "P)\u001B[31m Make Payment (Debit)\u001B[0m");
-            System.out.println(BOLD + "L)\u001B[38;2;212;175;55m Ledger\u001B[0m");
+            System.out.println(BOLD + GREEN + "D) Add Deposit " + RESET );
+            System.out.println(BOLD + RED + "P) Make Payment (Debit)" + RESET);
+            System.out.println(BOLD + GOLD + "L) Ledger " + RESET);
             System.out.println(BOLD + "X) Exit" + RESET );
 
             String input = scanner.nextLine().trim();
@@ -221,7 +220,8 @@ public class FinancialTracker {
 
     }
 
-    /* ------------------------------------------------------------------
+    /* ------------------------------------------------l
+    ------------------
        Ledger menu
        ------------------------------------------------------------------ */
     private static void ledgerMenu(Scanner scanner) {
