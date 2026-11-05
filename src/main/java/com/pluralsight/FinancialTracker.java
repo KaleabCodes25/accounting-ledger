@@ -1,15 +1,12 @@
 package com.pluralsight;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
+
 import java.io.*;
-import java.nio.file.LinkOption;
-import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Scanner;
 
 /*
@@ -413,11 +410,20 @@ public class FinancialTracker {
         // TODO – prompt for any combination of date range, description,
         //        vendor, and exact amount, then display matches
         System.out.println("===================================CUSTOM SEARCH======================================");
-        System.out.print("Enter a start date(yyyy-MM-dd) or skip by pressing Enter: ");
-        String startDate = scanner.nextLine().trim();
+        String startDate = null;
+        String endDate = null;
+        try {
+            System.out.print("Enter a start date(yyyy-MM-dd) or skip by pressing Enter: ");
+            startDate = scanner.nextLine().trim();
+            parseDate(startDate);
 
-        System.out.print("Enter an end date(yyyy-MM-dd) or skip by pressing Enter: ");
-        String endDate = scanner.nextLine().trim();
+            System.out.print("Enter an end date(yyyy-MM-dd) or skip by pressing Enter: ");
+            endDate = scanner.nextLine().trim();
+            parseDate(endDate);
+        } catch (Exception e) {
+            System.err.println("Enter a valid date yyyy-MM-dd: " + e.getMessage());
+            return;
+        }
 
         System.out.print("Enter a description or skip by pressing Enter: ");
         String description = scanner.nextLine().trim();
