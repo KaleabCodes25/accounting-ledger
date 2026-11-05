@@ -23,6 +23,16 @@ import java.util.Scanner;
  *       This class does not compile until Transaction exists.
  */
 public class FinancialTracker {
+    private static final String RESET = "\u001B[0m";  //
+    private static final String BOLD = "\u001B[1m";
+
+    private static final String GOLD = "\u001B[38;2;212;175;55m";
+    private static final String NAVY = "\u001B[38;2;20;43;69m";
+
+    private static final String GREEN = "\u001B[32m";
+    private static final String RED = "\u001B[31m";
+
+    private static final String BG_NAVY = "\u001B[48;2;20;43;69m";
 
     /* ------------------------------------------------------------------
        Shared data and formatters
@@ -39,7 +49,7 @@ public class FinancialTracker {
     private static final DateTimeFormatter DATETIME_FMT = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
 
     public static void main(String[] args) {
-        System.out.println("\u001B[33m" + "\u001B[1m");
+        System.out.println(GOLD + BOLD);
 
         System.out.println("""
                       ░██                           ░██                               \s
@@ -54,20 +64,19 @@ public class FinancialTracker {
                 
                 """);
         loadTransactions(FILE_NAME);
-        System.out.println("\u001B[0m");
-
+        System.out.println(RESET);
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
         while (running) {
-            System.out.println("Welcome to TransactionApp");
-            System.out.println("Choose an option:");
-            System.out.println("\u001B[33m\u001B[1m===== LEDGER =====\u001B[0m");
+            System.out.println(BOLD +  "Welcome to TransactionApp");
+            System.out.println(BOLD + "Choose an option:");
+            System.out.println(GOLD + BOLD + "===== LEDGER =====" + RESET);
 
-            System.out.println("D)\u001B[32m Add Deposit\u001B[0m");
-            System.out.println("P)\u001B[31m Make Payment (Debit)\u001B[0m");
-            System.out.println("L)\u001B[38;2;212;175;55ml Ledger\u001B[0m");
-            System.out.println("X) Exit");
+            System.out.println(BOLD + "D)\u001B[32m Add Deposit\u001B[0m");
+            System.out.println(BOLD + "P)\u001B[31m Make Payment (Debit)\u001B[0m");
+            System.out.println(BOLD + "L)\u001B[38;2;212;175;55m Ledger\u001B[0m");
+            System.out.println(BOLD + "X) Exit" + RESET );
 
             String input = scanner.nextLine().trim();
 
@@ -109,8 +118,15 @@ public class FinancialTracker {
     private static void addDeposit(Scanner scanner) {
         // TODO
 
-        System.out.print("Enter date and time (yyyy-MM-dd HH:mm:ss): ");
-        String dateTimeInput = scanner.nextLine();
+        String dateTimeInput = null;
+        try {
+            System.out.print("Enter date and time (yyyy-MM-dd HH:mm:ss): ");
+            dateTimeInput = scanner.nextLine();
+            parseDateTime(dateTimeInput);
+        } catch (Exception e) {
+            System.err.println("Enter a valid Date in the required format : " + e.getMessage());
+            return;
+        }
 
         LocalDateTime dateTime = LocalDateTime.parse(dateTimeInput, DATETIME_FMT);
 
@@ -155,8 +171,15 @@ public class FinancialTracker {
     private static void addPayment(Scanner scanner) {
         // TODO
 
-        System.out.print("Enter date and time (yyyy-MM-dd HH:mm:ss): ");
-        String dateTimeInput = scanner.nextLine();
+        String dateTimeInput = null;
+        try {
+            System.out.print("Enter date and time (yyyy-MM-dd HH:mm:ss): ");
+            dateTimeInput = scanner.nextLine();
+            parseDateTime(dateTimeInput);
+        } catch (Exception e) {
+            System.err.println("Enter the date in required format: " + e.getMessage());
+            return;
+        }
 
         LocalDateTime dateTime = LocalDateTime.parse(dateTimeInput, DATETIME_FMT);  // change the users input into datetime object using the datetime formatter.
 
@@ -493,5 +516,12 @@ public class FinancialTracker {
         }
         return Double.parseDouble(s);
     }
+    private static LocalDateTime parseDateTime(String s) {
+        /* TODO – return LocalDateTime or null */
+        if (s.isEmpty()) { // checking to see its empty.
+            return null;
+        }
+        return LocalDateTime.parse(s);
 
+    }
 }
