@@ -5,24 +5,10 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/*
- * Capstone skeleton – personal finance tracker.
- * ------------------------------------------------
- * File format  (pipe-delimited)
- *     yyyy-MM-dd|HH:mm:ss|description|vendor|amount
- * A deposit has a positive amount; a payment is stored
- * as a negative amount.
- *
- * TODO: create the Transaction class in this package first.
- *       One object = one line of the file. Decide its fields from
- *       the file format above, add a constructor and getters.
- *       This class does not compile until Transaction exists.
- */
 public class FinancialTracker {
     private static final String RESET = "\u001B[0m";  //
     private static final String BOLD = "\u001B[1m";  // ANSI Colors
@@ -34,9 +20,6 @@ public class FinancialTracker {
     private static final String RED = "\u001B[31m";
     private static final String BRIGHT_BLUE = "\u001B[94m";
 
-    /* ------------------------------------------------------------------
-       Shared data and formatters
-       ------------------------------------------------------------------ */
     private static final ArrayList<Transaction> transactions = new ArrayList<>();
     private static final String FILE_NAME = "transactions.csv";
 
@@ -69,13 +52,13 @@ public class FinancialTracker {
         boolean running = true;
 
         while (running) {
-            System.out.println(BOLD +  "Welcome to TransactionApp");
+            System.out.println(BOLD + "Welcome to TransactionApp");
             System.out.println(BOLD + "Choose an option:");
             System.out.println(GOLD + BOLD + "===== LEDGER =====" + RESET);
-            System.out.println(BOLD + GREEN + "D) Add Deposit " + RESET );
+            System.out.println(BOLD + GREEN + "D) Add Deposit " + RESET);
             System.out.println(BOLD + RED + "P) Make Payment (Debit)" + RESET);
             System.out.println(BOLD + GOLD + "L) Ledger " + RESET);
-            System.out.println(BOLD + "X) Exit" + RESET );
+            System.out.println(BOLD + "X) Exit" + RESET);
 
             String input = scanner.nextLine().trim();
 
@@ -89,11 +72,8 @@ public class FinancialTracker {
         }
         scanner.close();
     }
-
     public static void loadTransactions(String fileName) {
-        // TODO: create file if it does not exist, then read each line,
-        //       parse the five fields, build a Transaction object,
-        //       and add it to the transactions list.
+
         String line;
         try {
             BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME)); //create a buffer reader.
@@ -115,13 +95,11 @@ public class FinancialTracker {
     }
 
     private static void addDeposit(Scanner scanner) {
-        // TODO
-
         String dateTimeInput = null;
         try {
             System.out.print("Enter date and time (yyyy-MM-dd HH:mm:ss): ");
             dateTimeInput = scanner.nextLine();
-            LocalDateTime.parse(dateTimeInput,DATETIME_FMT);
+            LocalDateTime.parse(dateTimeInput, DATETIME_FMT);
         } catch (Exception e) {
             System.err.println("Enter a valid Date in the required format : " + e.getMessage());
             return;
@@ -168,7 +146,6 @@ public class FinancialTracker {
     }
 
     private static void addPayment(Scanner scanner) {
-        // TODO
 
         String dateTimeInput = null;
         try {
@@ -220,10 +197,6 @@ public class FinancialTracker {
 
     }
 
-    /* ------------------------------------------------l
-    ------------------
-       Ledger menu
-       ------------------------------------------------------------------ */
     private static void ledgerMenu(Scanner scanner) {
         boolean running = true;
         while (running) {
@@ -232,11 +205,11 @@ public class FinancialTracker {
             System.out.println("==============================");
 
             System.out.println("Choose an option:");
-            System.out.println(YELLOW + BOLD+ "A) All" );
-            System.out.println( "D) Deposits" );
-            System.out.println( "P) Payments" );
-            System.out.println( "R) Reports" );
-            System.out.println( "H) Home" + RESET);
+            System.out.println(YELLOW + BOLD + "A) All");
+            System.out.println("D) Deposits");
+            System.out.println("P) Payments");
+            System.out.println("R) Reports");
+            System.out.println("H) Home" + RESET);
 
             String input = scanner.nextLine().trim();
 
@@ -251,11 +224,7 @@ public class FinancialTracker {
         }
     }
 
-    /* ------------------------------------------------------------------
-       Display helpers: show data in neat columns
-       ------------------------------------------------------------------ */
     private static void displayLedger() {
-        /* TODO – print all transactions in column format, newest first */
         System.out.println(GOLD + "==============================ALL TRANSACTIONS=======================================" + RESET);
 
         System.out.printf("%-12s | %-29s | %-23s | %-12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT");
@@ -266,13 +235,13 @@ public class FinancialTracker {
             Transaction transaction = transactions.get(i);  // then assign it to transaction,so we can access its values.
             String color;
 
-            if(transaction.getAmount() < 0){ //checking if getAmount is a negative, if it is, then make the transaction color red.
-                color = RED;}
-            else {
+            if (transaction.getAmount() < 0) { //checking if getAmount is a negative, if it is, then make the transaction color red.
+                color = RED;
+            } else {
                 color = GREEN; // else, make it Green.
             }
 
-            System.out.printf( color + "%-12s | %-29s | %-23s | $%11.2f%n" + RESET,  // then call the getters to print it out
+            System.out.printf(color + "%-12s | %-29s | %-23s | $%11.2f%n" + RESET,  // then call the getters to print it out
 
                     transaction.getDate(),
                     transaction.getDescription(),
@@ -285,11 +254,10 @@ public class FinancialTracker {
         System.out.println("======================================================================================");
 
     }
-
     private static void displayDeposits() {
-        //* TODO – only amount > 0
 
-        System.out.println( GOLD +"==================================DEPOSITS==========================================" + RESET);
+
+        System.out.println(GOLD + "==================================DEPOSITS==========================================" + RESET);
 
         System.out.printf(GOLD + "%-12s | %-20s | %-20s | %12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT" + RESET);
 
@@ -299,19 +267,17 @@ public class FinancialTracker {
 
             if (transaction.getAmount() > 0) {  // if getAmount value is positive, then get those transactions.
 
-                System.out.printf( GREEN +  "%-12s | %-20s | %-20s | $%10.2f%n" + RESET,
+                System.out.printf(GREEN + "%-12s | %-20s | %-20s | $%10.2f%n" + RESET,
                         transaction.getDate(),
                         transaction.getDescription(),
                         transaction.getVendor(),
                         transaction.getAmount());
             }
-
         }
         System.out.println("========================================================================================");
     }
 
     private static void displayPayments() {
-        /* TODO – only amount < 0               */
         System.out.println(GOLD + "\n=====================================PAYMENTS========================================" + RESET);
 
         System.out.printf(GOLD + "%-12s | %-25s | %-25s | %12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT" + RESET);
@@ -329,15 +295,11 @@ public class FinancialTracker {
                         transaction.getAmount());
 
             }
-
         }
 
         System.out.println("=======================================================================================");
     }
 
-    /* ------------------------------------------------------------------
-       Reports menu
-       ------------------------------------------------------------------ */
     private static void reportsMenu(Scanner scanner) {
         boolean running = true;
         while (running) {
@@ -401,11 +363,8 @@ public class FinancialTracker {
         }
     }
 
-    /* ------------------------------------------------------------------
-       Reporting helpers
-       ------------------------------------------------------------------ */
+
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
-        // TODO – iterate transactions, print those within the range
 
         for (Transaction transaction : transactions) { // loop through transactions.
             LocalDate date = transaction.getDate(); // get the date of each transaction.
@@ -423,7 +382,6 @@ public class FinancialTracker {
     }
 
     private static void filterTransactionsByVendor(String vendor) {
-        // TODO – iterate transactions, print those with matching vendor
         System.out.println(GOLD + "=====================================VENDOR========================================" + RESET);
         boolean found = false;
         for (Transaction transaction : transactions) {
@@ -443,8 +401,6 @@ public class FinancialTracker {
     }
 
     private static void customSearch(Scanner scanner) {
-        // TODO – prompt for any combination of date range, description,
-        //        vendor, and exact amount, then display matches
         System.out.println(GOLD + "===================================CUSTOM SEARCH======================================" + RESET);
         String startDate = null;
         String endDate = null;
@@ -488,13 +444,13 @@ public class FinancialTracker {
                 foundMatch = false;
 
             }
-            if (!vendor.isEmpty() && !transaction.getVendor().equalsIgnoreCase(vendor)) { /* if not empty and vendor is not in transaction ,then false.
+            if (!vendor.isEmpty() && !transaction.getVendor().equalsIgnoreCase(vendor)) { // if not empty and vendor is not in transaction ,then false.
                 foundMatch = false;
-            */
-            }
 
+            }
             if (!amount.isEmpty() && (Double.compare(transaction.getAmount(), parseDouble(amount)) != 0)) {// using compare method to compare the two amounts, if zero, then false.
-                foundMatch = false; //
+                foundMatch = false;
+
             }
             if (foundMatch) {
                 System.out.printf("%-12s | %-30s | %-25s | $%10.2f%n", // then print every transaction that matches.
@@ -502,16 +458,12 @@ public class FinancialTracker {
                         transaction.getDescription(),
                         transaction.getVendor(),
                         transaction.getAmount());
-
             }
         }
+
     }
 
-    /* ------------------------------------------------------------------
-       Utility parsers (you can reuse in many places)
-       ------------------------------------------------------------------ */
     private static LocalDate parseDate(String s) {
-        /* TODO – return LocalDate or null */
         if (s.isEmpty()) { // checking to see its empty.
             return null;
         }
@@ -519,18 +471,19 @@ public class FinancialTracker {
     }
 
     private static Double parseDouble(String s) {
-        /* TODO – return Double   or null */
         if (s.isEmpty()) { // check to see if its empty.
             return null;
         }
         return Double.parseDouble(s);
     }
     /*private static LocalDateTime parseDateTime(String s)
-        *//* TODO – return LocalDateTime or null *//*
         if (s.isEmpty()) { // checking to see its empty.
             return null;
         }
         return LocalDateTime.parse(s);*/
+
+
+
 
 
 }
