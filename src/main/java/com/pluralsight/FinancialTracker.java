@@ -122,7 +122,7 @@ public class FinancialTracker {
         try {
             System.out.print("Enter date and time (yyyy-MM-dd HH:mm:ss): ");
             dateTimeInput = scanner.nextLine();
-            parseDateTime(dateTimeInput);
+            LocalDateTime.parse(dateTimeInput,DATETIME_FMT);
         } catch (Exception e) {
             System.err.println("Enter a valid Date in the required format : " + e.getMessage());
             return;
@@ -175,7 +175,7 @@ public class FinancialTracker {
         try {
             System.out.print("Enter date and time (yyyy-MM-dd HH:mm:ss): ");
             dateTimeInput = scanner.nextLine();
-            parseDateTime(dateTimeInput);
+            LocalDateTime.parse(dateTimeInput, DATETIME_FMT);
         } catch (Exception e) {
             System.err.println("Enter the date in required format: " + e.getMessage());
             return;
@@ -516,12 +516,12 @@ public class FinancialTracker {
         }
         return Double.parseDouble(s);
     }
-    private static LocalDateTime parseDateTime(String s) {
-        /* TODO – return LocalDateTime or null */
+    /*private static LocalDateTime parseDateTime(String s)
+        *//* TODO – return LocalDateTime or null *//*
         if (s.isEmpty()) { // checking to see its empty.
             return null;
         }
-        return LocalDateTime.parse(s);
+        return LocalDateTime.parse(s);*/
 
-    }
+
 }
