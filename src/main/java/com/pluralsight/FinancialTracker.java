@@ -5,6 +5,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -24,15 +25,14 @@ import java.util.Scanner;
  */
 public class FinancialTracker {
     private static final String RESET = "\u001B[0m";  //
-    private static final String BOLD = "\u001B[1m";
+    private static final String BOLD = "\u001B[1m";  // ANSI Colors
 
     private static final String GOLD = "\u001B[38;2;212;175;55m";
-    private static final String NAVY = "\u001B[38;2;20;43;69m";
+    private static final String YELLOW = "\u001B[33m";
 
     private static final String GREEN = "\u001B[32m";
     private static final String RED = "\u001B[31m";
-
-    private static final String BG_NAVY = "\u001B[48;2;20;43;69m";
+    private static final String BRIGHT_BLUE = "\u001B[94m";
 
     /* ------------------------------------------------------------------
        Shared data and formatters
@@ -63,8 +63,8 @@ public class FinancialTracker {
                                                          ░███████                     \s
                 
                 """);
-        loadTransactions(FILE_NAME);
         System.out.println(RESET);
+        loadTransactions(FILE_NAME);
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
@@ -227,16 +227,16 @@ public class FinancialTracker {
     private static void ledgerMenu(Scanner scanner) {
         boolean running = true;
         while (running) {
-            System.out.println("\n================================");
-            System.out.println("             Ledger              ");
-            System.out.println("=================================");
+            System.out.println("==============================");
+            System.out.println(GOLD + "         LEDGER            " + RESET);
+            System.out.println("==============================");
 
             System.out.println("Choose an option:");
-            System.out.println("A) All");
-            System.out.println("D) Deposits");
-            System.out.println("P) Payments");
-            System.out.println("R) Reports");
-            System.out.println("H) Home");
+            System.out.println(YELLOW + BOLD+ "A) All" );
+            System.out.println( "D) Deposits" );
+            System.out.println( "P) Payments" );
+            System.out.println( "R) Reports" );
+            System.out.println( "H) Home" + RESET);
 
             String input = scanner.nextLine().trim();
 
@@ -256,7 +256,7 @@ public class FinancialTracker {
        ------------------------------------------------------------------ */
     private static void displayLedger() {
         /* TODO – print all transactions in column format, newest first */
-        System.out.println("\n==============================ALL TRANSACTIONS=======================================");
+        System.out.println(GOLD + "==============================ALL TRANSACTIONS=======================================" + RESET);
 
         System.out.printf("%-12s | %-29s | %-23s | %-12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT");
 
@@ -264,13 +264,22 @@ public class FinancialTracker {
 
         for (int i = transactions.size() - 1; i >= 0; i--) { // get the last index, then go down the indexes until zero.
             Transaction transaction = transactions.get(i);  // then assign it to transaction,so we can access its values.
+            String color;
 
-            System.out.printf("%-12s | %-29s | %-23s | $%11.2f%n",  // then call the getters to print it out
+            if(transaction.getAmount() < 0){ //checking if getAmount is a negative, if it is, then make the transaction color red.
+                color = RED;}
+            else {
+                color = GREEN; // else, make it Green.
+            }
+
+            System.out.printf( color + "%-12s | %-29s | %-23s | $%11.2f%n" + RESET,  // then call the getters to print it out
 
                     transaction.getDate(),
                     transaction.getDescription(),
                     transaction.getVendor(),
                     transaction.getAmount());
+
+
         }
 
         System.out.println("======================================================================================");
@@ -280,9 +289,9 @@ public class FinancialTracker {
     private static void displayDeposits() {
         //* TODO – only amount > 0
 
-        System.out.println("\n==================================DEPOSITS==========================================");
+        System.out.println( GOLD +"==================================DEPOSITS==========================================" + RESET);
 
-        System.out.printf("%-12s | %-20s | %-20s | %12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT");
+        System.out.printf(GOLD + "%-12s | %-20s | %-20s | %12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT" + RESET);
 
         System.out.println("---------------------------------------------------------------------------------------");
 
@@ -290,7 +299,7 @@ public class FinancialTracker {
 
             if (transaction.getAmount() > 0) {  // if getAmount value is positive, then get those transactions.
 
-                System.out.printf("%-12s | %-20s | %-20s | $%10.2f%n",
+                System.out.printf( GREEN +  "%-12s | %-20s | %-20s | $%10.2f%n" + RESET,
                         transaction.getDate(),
                         transaction.getDescription(),
                         transaction.getVendor(),
@@ -303,9 +312,9 @@ public class FinancialTracker {
 
     private static void displayPayments() {
         /* TODO – only amount < 0               */
-        System.out.println("\n=====================================PAYMENTS========================================");
+        System.out.println(GOLD + "\n=====================================PAYMENTS========================================" + RESET);
 
-        System.out.printf("%-12s | %-25s | %-25s | %12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT");
+        System.out.printf(GOLD + "%-12s | %-25s | %-25s | %12s%n", "DATE", "DESCRIPTION", "VENDOR", "AMOUNT" + RESET);
 
         System.out.println("---------------------------------------------------------------------------------------");
 
@@ -313,7 +322,7 @@ public class FinancialTracker {
 
             if (transaction.getAmount() < 0) {  // if getAmount value is negative, then get those transactions.
 
-                System.out.printf("%-12s | %-30s | %-25s | $%10.2f%n",
+                System.out.printf(RED + "%-12s | %-30s | %-25s | $%10.2f%n" + RESET,
                         transaction.getDate(),
                         transaction.getDescription(),
                         transaction.getVendor(),
@@ -332,15 +341,15 @@ public class FinancialTracker {
     private static void reportsMenu(Scanner scanner) {
         boolean running = true;
         while (running) {
-            System.out.println("Reports");
-            System.out.println("Choose an option:");
+            System.out.println(BOLD + "Reports");
+            System.out.println(BRIGHT_BLUE + BOLD + "Choose an option:");
             System.out.println("1) Month To Date");
             System.out.println("2) Previous Month");
             System.out.println("3) Year To Date");
             System.out.println("4) Previous Year");
             System.out.println("5) Search by Vendor");
             System.out.println("6) Custom Search");
-            System.out.println("0) Back");
+            System.out.println("0) Back" + RESET);
 
             String input = scanner.nextLine().trim();
 
@@ -348,7 +357,7 @@ public class FinancialTracker {
                 case "1" -> {
                     LocalDate today = LocalDate.now(); // get the local date.
                     LocalDate startOfMonth = today.withDayOfMonth(1);
-                    System.out.println("=================================START OF MONTH====================================");
+                    System.out.println(GOLD + "=================================START OF MONTH====================================" + RESET);
                     filterTransactionsByDate(startOfMonth, today);
                 }
                 case "2" -> {
@@ -357,14 +366,14 @@ public class FinancialTracker {
 
                     LocalDate start = previousMonth.withDayOfMonth(1);
                     LocalDate end = previousMonth.withDayOfMonth(previousMonth.lengthOfMonth()); // we want the local date, so this gives us the end of the previous month.
-                    System.out.println("==================================PREVIOUS MONTH=====================================");
+                    System.out.println(GOLD + "==================================PREVIOUS MONTH=====================================" + RESET);
                     filterTransactionsByDate(start, end);
 
                 }
                 case "3" -> {
                     LocalDate now = LocalDate.now();
                     LocalDate yearBegin = now.withDayOfYear(1);  // use this method to get the first day of the year.
-                    System.out.println("=================================BEGINNING OF YEAR====================================");
+                    System.out.println(GOLD + "=================================BEGINNING OF YEAR====================================" + RESET);
                     filterTransactionsByDate(yearBegin, now);
                 }
                 case "4" -> {
@@ -373,7 +382,7 @@ public class FinancialTracker {
 
                     LocalDate start = previousYear.withDayOfYear(1);
                     LocalDate end = previousYear.withDayOfYear(previousYear.lengthOfYear());
-                    System.out.println("===================================PREVIOUS YEAR======================================");
+                    System.out.println(GOLD + "===================================PREVIOUS YEAR======================================" + RESET);
                     filterTransactionsByDate(start, end);
 
                 }
@@ -415,7 +424,7 @@ public class FinancialTracker {
 
     private static void filterTransactionsByVendor(String vendor) {
         // TODO – iterate transactions, print those with matching vendor
-        System.out.println("=====================================VENDOR========================================");
+        System.out.println(GOLD + "=====================================VENDOR========================================" + RESET);
         boolean found = false;
         for (Transaction transaction : transactions) {
             if (vendor.equalsIgnoreCase(transaction.getVendor())) {
@@ -436,7 +445,7 @@ public class FinancialTracker {
     private static void customSearch(Scanner scanner) {
         // TODO – prompt for any combination of date range, description,
         //        vendor, and exact amount, then display matches
-        System.out.println("===================================CUSTOM SEARCH======================================");
+        System.out.println(GOLD + "===================================CUSTOM SEARCH======================================" + RESET);
         String startDate = null;
         String endDate = null;
         try {
