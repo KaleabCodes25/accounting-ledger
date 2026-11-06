@@ -109,9 +109,9 @@ allowing the records to be saved and loaded whenever needed.
 
 
 
-[Main menu](![Screen Recording.MENU 2026-11-06 063915.gif](images/Screen%20Recording.MENU%202026-11-06%20063915.gif))
-![One feature in action](images/![Screen Recording.FEATURE 2026-11-06 064009.gif](images/Screen%20Recording.FEATURE%202026-11-06%20064009.gif))
-![One Error in action](images/![Screen Recording.ERROR 2026-11-06 064246.gif](images/Screen%20Recording.ERROR%202026-11-06%20064246.gif))
+[Main menu]![Screen Recording.MENU 2026-11-06 063915.gif](images/Screen%20Recording.MENU%202026-11-06%20063915.gif))
+[One feature in action]![Screen Recording.FEATURE 2026-11-06 064009.gif](images/Screen%20Recording.FEATURE%202026-11-06%20064009.gif))
+[One Error in action]![Screen Recording.ERROR 2026-11-06 064246.gif](images/Screen%20Recording.ERROR%202026-11-06%20064246.gif))
 
 ## A piece of code I am proud of
 
